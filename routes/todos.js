@@ -49,18 +49,18 @@ router.post(  '/',
       const { task } = req.body;
   
       try {
-        const task = new Todo({
+        const todo = new Todo({
           task,
           user: req.user.id,
         });
   
-        await task.save();
+        await todo.save();
   
         res.json(task);
       } catch (err) {
         console.error(err.message);
         res.status(500).json({
-          msg: 'Server error',
+          msg: 'Server vverror',
         });
       }
     }
