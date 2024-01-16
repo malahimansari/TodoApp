@@ -1,3 +1,83 @@
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: API for managing users
+ * 
+ * /api/v1/users:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [User]
+ *     requestBody:
+ *       description: User information for creating a new user.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The name of the user.
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the user.
+ *               password:
+ *                 type: string
+ *                 description: The password for the user.
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *     responses:
+ *       '200':
+ *         description: The created User.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: The auto-generated id of the user.
+ *                 name:
+ *                   type: string
+ *                   description: The name of the user.
+ *                 email:
+ *                   type: string
+ *                   description: The email address of the user.
+ *                 created_at:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The date and time the user was added.
+ *       '400':
+ *         description: Bad Request. Indicates invalid or missing data in the request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       msg:
+ *                         type: string
+ *                         description: The error message.
+ *       '500':
+ *         description: Internal Server Error. Indicates a server-side issue.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: The error message.
+ */
+
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");

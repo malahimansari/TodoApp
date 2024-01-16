@@ -1,3 +1,87 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Todo:
+ *       type: object
+ *       properties:
+ *         task:
+ *           type: string
+ *           description: The task to be created or updated
+ *         user:
+ *           type: string
+ *           description: The user ID who created the task
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Todo
+ *   description: The Todo API
+ * /api/v1/todos:
+ *   get:
+ *     summary: Get all todos
+ *     tags: [Todo]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Returns the list of todos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Todo'
+ *       500:
+ *         description: Some server error
+ *   post:
+ *     summary: Create a new todo
+ *     tags: [Todo]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Todo'
+ *     responses:
+ *       200:
+ *         description: The created todo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Todo'
+ *       400:
+ *         description: Bad request. Invalid input data.
+ *       500:
+ *         description: Some server error
+ * /api/v1/todos/{id}:
+ *   delete:
+ *     summary: Delete todo by ID
+ *     tags: [Todo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the todo to delete
+ *     responses:
+ *       200:
+ *         description: Todo removed successfully
+ *       400:
+ *         description: Bad request. Todo not found.
+ *       401:
+ *         description: Unauthorized. Invalid authorization.
+ *       500:
+ *         description: Some server error
+ */
+
+
 const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
@@ -72,55 +156,37 @@ router.post(  '/',
  * @access private
  */
 
-router.put('/:id', auth, async (req, res) => {
-    res.send('Update Task by id');	  const id = req.params.id;
-  
-    const { task } = req.body;
-  
-    try {
-      const taskFields = {};
-  
-      if (task) taskFields.task = task;
-  
-      let task = await Todo.findById(id);
-  
-      if (!task) {
-        return res.status(400).json({
-          msg: 'Task not found',
-        });
-      }
-  
-      if (req.user.id.toString() !== task.user.toString()) {
-        res.status(401).json({
-          msg: 'Invalid authorization',
-        });
-      }
-  
-      task = await Todo.findByIdAndUpdate(
-        id,
-        { $set: taskFields },
-        { new: true }
-      );
-  
-      return res.json(task);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).json({
-        msg: 'Server error',
+router.delete("/:id", auth, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const task_todo = await Todo.findById(id);
+
+    if (!task_todo) {
+      return res.status(400).json({
+        msg: 'Task not found',
       });
     }
 
+    if (req.user.id.toString() !== task_todo.user.toString()) {
+      return res.status(401).json({
+        msg: 'Invalid authorization',
+      });
+    }
 
+    await Todo.findOneAndDelete({ _id: id });
+
+    res.json({
+      msg: 'Task removed successfully',
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      msg: 'Server error',
+    });
+  }
 });
 
-/**
- * @route Delete/api/v1/todos
- * @desc Delete todos by id
- * @access private
- */
 
-router.delete("/:id", (req, res) => {
-  res.send("Delete todos by id");
-});
 
 module.exports = router;
