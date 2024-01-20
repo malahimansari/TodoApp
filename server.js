@@ -15,17 +15,21 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Todo App API",
-      version: "1.0.0",
-      description: "API documentation for the Todo App",
+      title: "Todo App",
+      version: "0.1",
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: "http://localhost:8080/",
+      },
+    ],
+    security: [
+      {
+        BearerAuth: [],
       },
     ],
   },
-  apis: ["./routes/*.js"], // Path to your route files
+  apis: ["./routes/*.js"],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);

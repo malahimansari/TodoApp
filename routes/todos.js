@@ -8,9 +8,12 @@
  *         task:
  *           type: string
  *           description: The task to be created or updated
- *         user:
- *           type: string
- *           description: The user ID who created the task
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: apiKey
+ *       in: header
+ *       name: Authorization
+ *       description: Use 'Bearer {token}' format
  */
 
 /**
@@ -23,7 +26,7 @@
  *     summary: Get all todos
  *     tags: [Todo]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: [] 
  *     responses:
  *       200:
  *         description: Returns the list of todos
@@ -39,7 +42,7 @@
  *     summary: Create a new todo
  *     tags: [Todo]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: [] 
  *     requestBody:
  *       required: true
  *       content:
@@ -62,7 +65,7 @@
  *     summary: Delete todo by ID
  *     tags: [Todo]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -144,7 +147,7 @@ router.post(  '/',
       } catch (err) {
         console.error(err.message);
         res.status(500).json({
-          msg: 'Server vverror',
+          msg: 'Server error',
         });
       }
     }

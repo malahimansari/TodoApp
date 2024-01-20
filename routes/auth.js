@@ -62,6 +62,8 @@
  *             required:
  *               - email
  *               - password
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       '200':
  *         description: Successful operation. Returns a JWT token for authentication.
