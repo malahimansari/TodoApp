@@ -181,8 +181,8 @@ router.post(
           });
         }
       );
-    } catch (err) {
-      console.error(err.message);
+    } catch (error) {
+      console.error(error.message);
       return res.status(500).json({
         msg: "Server Error",
       });
